@@ -23,7 +23,7 @@ function insensitive_keyword_is_taken( $return, $keyword ) {
 	$keyword = yourls_sanitize_keyword( $keyword );
 	$taken = false;
 	$table = YOURLS_DB_TABLE_URL;
-	$already_exists = $ydb->get_var( "SELECT COUNT(`keyword`) FROM `$table` WHERE LOWER(`keyword`) = LOWER('$keyword');" );
+	$already_exists = $ydb->get_var( "SELECT COUNT(keyword) FROM $table WHERE LOWER(keyword) = LOWER('$keyword');" );
 	if ( $already_exists )
 		$taken = true;
 
@@ -56,7 +56,7 @@ function insensitive_get_keyword_infos( $keyword, $use_cache = true ) {
 	yourls_do_action( 'get_keyword_not_cached', $keyword );
 
 	$table = YOURLS_DB_TABLE_URL;
-	$infos = $ydb->get_row( "SELECT * FROM `$table` WHERE LOWER(`keyword`) = LOWER('$keyword')" );
+	$infos = $ydb->get_row( "SELECT * FROM $table WHERE LOWER(keyword) = LOWER('$keyword')" );
 
 	if( $infos ) {
 		$infos = (array)$infos;
@@ -74,9 +74,9 @@ function insensitive_get_keyword_infos( $keyword, $use_cache = true ) {
 	$table = YOURLS_DB_TABLE_URL;
     error_log(var_export($keyword, true));
 	if ( $clicks !== false && is_int( $clicks ) && $clicks >= 0 )
-		$update = $ydb->fetchAffected( "UPDATE `$table` SET `clicks` = :clicks WHERE LOWER(`keyword`) = LOWER(:keyword)", array('clicks' => $clicks, 'keyword' => $keyword) );
+		$update = $ydb->fetchAffected( "UPDATE $table SET clicks = :clicks WHERE LOWER(keyword) = LOWER(:keyword)", array('clicks' => $clicks, 'keyword' => $keyword) );
 	else
-		$update = $ydb->fetchAffected( "UPDATE `$table` SET `clicks` = clicks + 1 WHERE LOWER(`keyword`) = LOWER(:keyword)", array('keyword' => $keyword) );
+		$update = $ydb->fetchAffected( "UPDATE $table SET clicks = clicks + 1 WHERE LOWER(keyword) = LOWER(:keyword)", array('keyword' => $keyword) );
 
 	yourls_do_action( 'update_clicks', $keyword, $update, $clicks );
 	return $update;
